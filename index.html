@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Find</title>
+</head>
+<body>
+
+    <div id="findDetails">
+        <h4>ID</h4>
+        <input id="findID" type="text"> <br><br>
+        <button id="find">FIND</button>
+        <h3 id="findName" type="text"></h3>
+    </div>
+    <script type="module">
+        var findID = document.querySelector("#findID");
+        var removeBtn = document.querySelector("#remove");
+        var findBtn = document.querySelector("#find");
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
+    const firebaseConfig = {
+      apiKey: "AIzaSyDTG1dZj-ouAr-zWUre8xuSqet5Qz08olI",
+      authDomain: "fir-12fb1.firebaseapp.com",
+      databaseURL: "https://fir-12fb1-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "fir-12fb1",
+      storageBucket: "fir-12fb1.appspot.com",
+      messagingSenderId: "77087316054",
+      appId: "1:77087316054:web:12549ca211b6fe0f7f03f7"
+    };
+
+    const app = initializeApp(firebaseConfig);
+
+    import { getDatabase, ref, get, set, child, update, remove, } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-database.js";
+
+    const db = getDatabase();
+        function FindData() {
+            const dbref = ref(db);
+
+            get(child(dbref, findID.value))
+                .then((snapshot) => {
+                    if (snapshot.exists()) {
+                        findName.innerHTML = "關卡: " + snapshot.val().Times;
+                    } else {
+                        alert("No data found");
+                    }
+                })
+                .catch((error) => {
+                    alert(error)
+                })
+
+        }
+
+        function RemoveData() {
+            remove(ref(db, "People/" + enterID.value))
+                .then(() => {
+                    alert("Data deleted successfully");
+                })
+                .catch((error) => {
+                    alert(error);
+                });
+        }
+
+        // removeBtn.addEventListener('click', RemoveData);
+        findBtn.addEventListener('click', FindData);
+
+    </script>
+</body>
+</html>

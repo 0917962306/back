@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Firebase Realtime Listener</title>
+</head>
+
+<body>
+
+    <div id="dataContainer">
+        <!-- Dynamic container for data lists -->
+        <div id="dataListsContainer"></div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js";
+        import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-database.js";
+
+        // Your Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyDTG1dZj-ouAr-zWUre8xuSqet5Qz08olI",
+            authDomain: "fir-12fb1.firebaseapp.com",
+            databaseURL: "https://fir-12fb1-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "fir-12fb1",
+            storageBucket: "fir-12fb1.appspot.com",
+            messagingSenderId: "77087316054",
+            appId: "1:77087316054:web:12549ca211b6fe0f7f03f7"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase();
+
+        // Reference to the Firebase database node you want to listen to
+        const dataRef = ref(db);
+
+        // Get the DOM elements
+        const dataListsContainer = document.querySelector("#dataListsContainer");
+
+        // Create an object to store data lists by ID
+        const dataLists = {};
+
+        // Set up the real-time listener
+        onValue(dataRef, (snapshot) => {
+            dataListsContainer.innerHTML = ""; // Clear previous data lists
+
+            // Iterate through each child node
+            snapshot.forEach((childSnapshot) => {
+                const data = childSnapshot.val();
+                const id = data.ID; // Assuming 'ID' is the field you want to group by
+                const times = data.Times;
+
+                // Create a list for each ID if it doesn't exist
+                if (!dataLists[id]) {
+                    const title = document.createElement("h4");
+                    title.textContent = `Data for ID: ${id}`;
+                    dataListsContainer.appendChild(title);  // Move this line here
+
+                    dataLists[id] = document.createElement("ul");
+                    dataLists[id].id = `dataList_${id}`;
+                    dataListsContainer.appendChild(dataLists[id]);
+                }
+
+                // Append the 'Times' to the respective list
+                const listItem = document.createElement("li");
+                listItem.textContent = `Times: ${times}`;
+                dataLists[id].appendChild(listItem);
+            });
+        });
+
+    </script>
+</body>
+
+</html>
