@@ -14,9 +14,11 @@
         <div id="dataListsContainer"></div>
     </div>
 
+    <button id="clearDataBtn">Clear All Data</button>
+
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js";
-        import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-database.js";
+        import { getDatabase, ref, onValue, set } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-database.js";
 
         // Your Firebase configuration
         const firebaseConfig = {
@@ -38,6 +40,7 @@
 
         // Get the DOM elements
         const dataListsContainer = document.querySelector("#dataListsContainer");
+        const clearDataBtn = document.querySelector("#clearDataBtn");
 
         // Create an object to store data lists by ID
         const dataLists = {};
@@ -55,19 +58,30 @@
                 // Create a list for each ID if it doesn't exist
                 if (!dataLists[id]) {
                     const title = document.createElement("h4");
-                    title.textContent = `Data for ID: ${id}`;
-                    dataListsContainer.appendChild(title);  // Move this line here
+                    title.textContent = `${id}`;
+                    dataListsContainer.appendChild(title);
 
                     dataLists[id] = document.createElement("ul");
                     dataLists[id].id = `dataList_${id}`;
                     dataListsContainer.appendChild(dataLists[id]);
                 }
 
-                // Append the 'Times' to the respective list
                 const listItem = document.createElement("li");
-                listItem.textContent = `Times: ${times}`;
+                listItem.textContent = `關卡: ${times}`;
                 dataLists[id].appendChild(listItem);
             });
+        });
+
+        // Add event listener for the clearDataBtn
+        clearDataBtn.addEventListener('click', () => {
+            // Clear all data in the database
+            set(ref(db), null)
+                .then(() => {
+                    console.log("Data cleared successfully.");
+                })
+                .catch((error) => {
+                    console.error("Error clearing data:", error);
+                });
         });
 
     </script>
