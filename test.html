@@ -14,8 +14,6 @@
         <div id="dataListsContainer"></div>
     </div>
 
-    <button id="clearDataBtn">Clear All Data</button>
-
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js";
         import { getDatabase, ref, onValue, set } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-database.js";
@@ -70,18 +68,6 @@
                 listItem.textContent = `關卡: ${times}`;
                 dataLists[id].appendChild(listItem);
             });
-        });
-
-        // Add event listener for the clearDataBtn
-        clearDataBtn.addEventListener('click', () => {
-            // Clear all data in the database
-            set(ref(db), null)
-                .then(() => {
-                    console.log("Data cleared successfully.");
-                })
-                .catch((error) => {
-                    console.error("Error clearing data:", error);
-                });
         });
 
     </script>
